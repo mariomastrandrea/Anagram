@@ -1,13 +1,16 @@
 package it.polito.tdp.anagram.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Anagram {
-
+	
 	public List<String> anagrammi(String parola) {
 		
-		permuta("", parola, 0) ; // LANCIA la ricorsione
-		return null ;
+		List<String> risultato = new ArrayList<>() ;
+		permuta("", parola, 0, risultato) ; // LANCIA la ricorsione
+		// cancella dalla lista le parole non valide (leggendo il dizionario)
+		return risultato ;
 		
 	}
 	
@@ -17,10 +20,12 @@ public class Anagram {
 	// lettere = le lettere della parola iniziale che ancora non abbiamo utilizzato
 	//           (=== il sotto-problema che dobbiamo risolvere)
 	
-	private void permuta(String parziale, String lettere, int livello) {
+	private void permuta(String parziale, String lettere, int livello, List<String> risultato) {
 		if( lettere.length()==0 ) { // caso terminale 
 			// la soluzione parziale è anche una soluzione completa!!
-			System.out.println(parziale) ;
+
+			// if(parziale è una parola valida?) {
+			risultato.add(parziale) ;
 		} else {
 			// fai ricorsione
 			// sottoproblema == una lettera (un singolo carattere) di 'lettere'
@@ -32,7 +37,9 @@ public class Anagram {
 				String nuovaLettere = lettere.substring(0, pos)+lettere.substring(pos+1) ;
 					// togli il carattere pos da lettere
 				
-				permuta(nuovaParziale, nuovaLettere, livello+1) ;
+				// if (nuovaParziale è un PREFISSO valido di almeno una parola nel dizionario)
+				// "aqz" -> no ; "car" -> si (carro, carrello, carta...)
+				permuta(nuovaParziale, nuovaLettere, livello+1, risultato) ;
 				
 				// Backtracking (NON SERVE)
 				// rimetti a posto 'parziale'
